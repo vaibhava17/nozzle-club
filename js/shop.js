@@ -5,6 +5,7 @@ import { buildKeychain, PRODUCTS, FILAMENTS } from './lib/keychain.js';
 import { createRenderer, studioEnvironment, addStudioLights, Swing, whenVisible, reducedMotion } from './lib/stage.js';
 import { money } from './lib/ui.js';
 import { cart } from './cart.js';
+import { markOpeningSoon, blockedWhileClosed } from './lib/shop-status.js';
 
 export function initShop() {
   const board = document.getElementById('pegboard');
@@ -74,8 +75,10 @@ export function initShop() {
       el.querySelectorAll('.swatch').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
       load(tile, b.dataset.c);
     }));
-    el.querySelector('.add').addEventListener('click', async (e) => {
+    markOpeningSoon(el.querySelector('.add'));
+    el.querySelector('.add').addEventListener('click', (e) => {
       const btn = e.currentTarget;
+      if (blockedWhileClosed(btn)) return;    // skip the snapshot render too
       const thumb = snapshot(tile);
       cart.add({
         key: `${p.id}-${tile.color}`, name: p.name, price: p.price, color: tile.color,

@@ -1,6 +1,7 @@
 // Cart state + drawer. Persists per browser (demo only).
 import { money, toast, confetti, flyToCart } from './lib/ui.js';
 import { FILAMENTS } from './lib/keychain.js';
+import { markOpeningSoon, blockedWhileClosed } from './lib/shop-status.js';
 
 const KEY = 'nozzle-club-cart-v1';
 const FREE_SHIP = 999;
@@ -19,6 +20,7 @@ const $ = (id) => document.getElementById(id);
 
 export const cart = {
   add(item, fromEl) {
+    if (blockedWhileClosed(fromEl)) return;   // shop not open yet: say so, change nothing
     const same = items.find((i) => i.key === item.key);
     if (same) same.qty += 1;
     else items.push({ ...item, qty: 1 });
@@ -99,7 +101,9 @@ export function initCart(lenis) {
   $('scrim').addEventListener('click', close);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && $('cart').classList.contains('is-open')) close(); });
   document.querySelectorAll('[data-close-cart]').forEach((a) => a.addEventListener('click', close));
+  markOpeningSoon($('checkoutBtn'), { tooltip: false });   // the note above it says it
   $('checkoutBtn').addEventListener('click', (e) => {
+    if (blockedWhileClosed(e.currentTarget)) return;
     const r = e.currentTarget.getBoundingClientRect();
     confetti(r.left + r.width / 2, r.top);
     toast('This is a demo, so no payment was taken. Thanks for trying Nozzle Club!', 4200);

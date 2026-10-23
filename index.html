@@ -48,6 +48,10 @@
     <section class="hero" id="top">
       <canvas id="heroCanvas" aria-label="A keychain being 3D printed" role="img"></canvas>
       <div class="hero-copy">
+        <p class="soon-flag" data-shop-closed hidden>
+          <span class="soon-dot" aria-hidden="true"></span>
+          <span><b>Opening soon.</b> The shop isn’t taking orders yet — have a look around and design yours in the meantime.</span>
+        </p>
         <h1 class="extruded" aria-label="Your name, printed in plastic.">
           <span class="h1-line" data-text="Your name,">Your name,</span>
           <span class="h1-line" data-text="printed in">printed in</span>
@@ -91,6 +95,10 @@
         <h2>Ready to clip on</h2>
         <p>Pick a colour, watch it change, add it to your keys. Every one is printed when you order.</p>
       </div>
+      <p class="soon-flag soon-flag-alt" data-shop-closed hidden>
+        <span class="soon-dot" aria-hidden="true"></span>
+        <span><b>Opening soon.</b> Every colour and preview below is live, but ordering switches on when we open.</span>
+      </p>
       <div class="pegboard" id="pegboard"></div>
     </section>
 
@@ -187,6 +195,7 @@
               <button class="btn btn-pink" type="submit" id="studioAdd">Add to cart</button>
               <button class="btn btn-outline" type="button" id="studioStl">Download STL</button>
             </div>
+            <p class="soon-inline" data-shop-closed hidden>Opening soon — the cart isn’t live yet. The STL download works today.</p>
           </div>
         </form>
       </div>
@@ -255,6 +264,7 @@
     </div>
     <div class="cart-foot" id="cartFoot">
       <div class="subtotal"><span>Subtotal</span><b id="cartSubtotal">₹0</b></div>
+      <p class="soon-inline" data-shop-closed hidden>Opening soon — checkout isn’t open yet.</p>
       <button class="btn btn-lemon btn-block" id="checkoutBtn">Check out</button>
     </div>
   </aside>

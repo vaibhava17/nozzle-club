@@ -8,6 +8,7 @@ import { createRenderer, studioEnvironment, addStudioLights, whenVisible, reduce
 import { icon } from './lib/icons.js';
 import { money, toast } from './lib/ui.js';
 import { cart } from './cart.js';
+import { SHOP_OPEN, SOON_LABEL, markOpeningSoon, blockedWhileClosed } from './lib/shop-status.js';
 
 const SHAPE_PRICE = { pill: 199, circle: 219, star: 229, heart: 219, hex: 219, flower: 239 };
 const FIGURE_PRICE = 279;
@@ -49,6 +50,12 @@ export function initStudio() {
     form.elements.thickness.value = state.thickness;
   }
   syncForm();
+
+  // while the shop is closed the button says so itself, so updatePrice keeps it
+  if (!SHOP_OPEN) {
+    $('studioAdd').textContent = `Add to cart · ${SOON_LABEL}`;
+    markOpeningSoon($('studioAdd'));
+  }
 
   // ---------- three ----------
   const renderer = createRenderer(canvas);
@@ -134,7 +141,7 @@ export function initStudio() {
     $('studioPrice').textContent = money(price());
     const min = kc?.meta.printMinutes ?? 30;
     $('studioTime').textContent = `Prints in about ${min} min`;
-    $('studioAdd').textContent = `Add to cart, ${money(price())}`;
+    $('studioAdd').textContent = SHOP_OPEN ? `Add to cart, ${money(price())}` : `Add to cart · ${SOON_LABEL}`;
     $('basePicked').textContent = FILAMENTS[state.base].name;
     $('accentPicked').textContent = FILAMENTS[state.accent].name;
     $('thickOut').textContent = `${state.thickness} mm`;
@@ -182,6 +189,7 @@ export function initStudio() {
 
   form.addEventListener('submit', (e) => {
     e.preventDefault();
+    if (blockedWhileClosed($('studioAdd'))) return;   // skip the snapshot render too
     const thumb = snapshot();
     const shapeName = FIGURES[state.shape]?.label || SHAPES[state.shape]?.label || 'Custom';
     const finish = { matte: 'Matte', silk: 'Silk', galaxy: 'Galaxy', glow: 'Glow' }[state.finish];

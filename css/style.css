@@ -104,6 +104,57 @@ p { margin: 0; }
 .btn-block { width: 100%; }
 .btn[disabled] { opacity: .55; pointer-events: none; }
 
+/* ---------- "opening soon" gate (flag: SHOP_OPEN in js/lib/shop-status.js) ---------- */
+.soon-flag {
+  --soon-bg: var(--lemon);
+  display: flex; align-items: center; gap: 11px;
+  width: fit-content; max-width: 58ch;
+  margin-bottom: 22px;
+  padding: 11px 20px;
+  border-radius: 22px;
+  border: 2.5px solid var(--ink);
+  background: var(--soon-bg); color: var(--ink);
+  box-shadow: 0 5px 0 var(--ink);
+  font-size: var(--fs-0); line-height: 1.4;
+}
+.soon-flag b { font-family: var(--display); font-weight: 400; font-size: 1.1rem; }
+.soon-flag-alt { --soon-bg: var(--pink); }
+.shop .soon-flag { margin: calc(clamp(36px, 5vw, 64px) * -0.55) 0 clamp(26px, 3vw, 40px); }
+.soon-dot {
+  flex: none; width: 12px; height: 12px; border-radius: 50%;
+  background: var(--ink);
+  animation: soon-pulse 1.9s var(--ease-out) infinite;
+}
+@keyframes soon-pulse {
+  0% { box-shadow: 0 0 0 0 rgb(20 15 63 / .5); }
+  70%, 100% { box-shadow: 0 0 0 10px rgb(20 15 63 / 0); }
+}
+
+/* gated commerce buttons: greyed out, but still clickable so they can explain */
+.btn.is-soon { --bg: #d7d3ea; --fg: rgb(20 15 63 / .58); --edge: rgb(20 15 63 / .38); cursor: not-allowed; }
+.btn.is-soon:hover, .btn.is-soon:active { transform: none; box-shadow: 0 5px 0 var(--edge); }
+.tag .btn.is-soon:hover, .tag .btn.is-soon:active { box-shadow: 0 4px 0 var(--edge); }
+
+.is-soon { position: relative; }
+.is-soon[data-soon]::after {
+  content: attr(data-soon);
+  position: absolute; left: 50%; bottom: calc(100% + 12px); translate: -50% 5px;
+  padding: 7px 13px; border-radius: 11px;
+  background: var(--ink); color: var(--paper);
+  font-size: var(--fs-0); font-weight: 700; white-space: nowrap;
+  opacity: 0; pointer-events: none;
+  transition: opacity .18s var(--ease-out), translate .18s var(--ease-out);
+}
+.is-soon[data-soon]:hover::after, .is-soon[data-soon]:focus-visible::after { opacity: 1; translate: -50% 0; }
+.soon-nudge { animation: soon-nudge .4s var(--ease-out); }
+@keyframes soon-nudge { 25% { transform: translateX(-5px); } 55% { transform: translateX(5px); } 80% { transform: translateX(-2px); } }
+
+.soon-inline {
+  display: flex; align-items: baseline; gap: 9px;
+  font-size: var(--fs-0); font-weight: 600; color: rgb(20 15 63 / .66);
+}
+.soon-inline::before { content: ""; flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--pink); }
+
 .chip {
   display: inline-flex; align-items: center; gap: 8px;
   min-height: 40px; padding: 0 16px;

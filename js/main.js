@@ -3,6 +3,8 @@ import Lenis from 'lenis';
 import { preloadFonts } from './lib/fonts.js';
 import { reducedMotion } from './lib/stage.js';
 import { initCart } from './cart.js';
+// Ordering is gated by the single SHOP_OPEN constant in js/lib/shop-status.js.
+import { initOpeningSoon } from './lib/shop-status.js';
 import { initHero } from './hero.js';
 import { initShop } from './shop.js';
 import { initStudio } from './studio.js';
@@ -40,6 +42,7 @@ const onScroll = () => nav.classList.toggle('is-solid', window.scrollY > 40);
 addEventListener('scroll', onScroll, { passive: true });
 onScroll();
 
+initOpeningSoon();
 initCart(lenis);
 
 // ---------- the one orchestrated moment: headline lines stack up like printed layers ----------
