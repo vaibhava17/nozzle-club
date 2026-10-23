@@ -311,7 +311,6 @@ export function initHero() {
     renderer.render(scene, camera);
   });
 
-  window.__hero = { state, pivot, scene, camera, get kc() { return kc; } };
   // kick off once fonts are ready
   setHud('Heating nozzle', 0, 0, 0);
   return { start: () => printDesign(QUEUE[0]) };

@@ -132,7 +132,6 @@ export function initShop() {
     return c.toDataURL('image/webp', 0.85);
   }
 
-  window.__shop = { tiles, get active() { return active; }, renderer };
   whenVisible(section, (v) => {
     active = v;
     if (!v) { renderer.setScissor(0, 0, innerWidth, innerHeight); renderer.clear(); }

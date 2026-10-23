@@ -16,7 +16,6 @@ if (!reducedMotion) {
   lenis = new Lenis({ duration: 1.2 });
   gsap.ticker.add((t) => lenis.raf(t * 1000));
   gsap.ticker.lagSmoothing(0);
-  window.__lenis = lenis;
 }
 
 document.querySelectorAll('a[href^="#"]').forEach((a) => {
