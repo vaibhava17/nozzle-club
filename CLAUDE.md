@@ -5,7 +5,7 @@ Learning workspace for interactive / animated web techniques.
 ## Contents
 
 - `analysis/` — reverse-engineering teardown of https://sweet-tape.com (Next.js 16 + GSAP + Lenis + Three.js + Matter.js). Start at `analysis/README.md`.
-- `keychain-store/` — "Nozzle Club" demo: single-page 3D-printed keychain shop (plain HTML + ES modules, three r185 / gsap / lenis via CDN import map, no build). Live print hero, pegboard shop, custom designer w/ STL export. Run: `cd keychain-store && python3 -m http.server 5173`. See `keychain-store/README.md`.
+- `index.html` + `css/` + `js/` + `assets/` — "Nozzle Club" demo: single-page 3D-printed keychain shop (plain HTML + ES modules, three r185 / gsap / lenis via CDN import map, no build). Live print hero, pegboard shop, custom designer w/ STL export. Moved to repo root (24 Oct 2026) so it serves directly from GitHub Pages at the repo's root URL. Run: `python3 -m http.server 5173` from repo root. See `KEYCHAIN_STORE_README.md`.
 
 ## keychain-store notes
 
