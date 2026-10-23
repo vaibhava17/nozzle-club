@@ -52,7 +52,7 @@ export function initShop() {
     const tile = {
       p, el, view: el.querySelector('.peg-view'), scene, camera, pivot,
       swing: new Swing({ stiffness: 20 + i, damping: 1.8 }),
-      kc: null, color: p.colors[0], twirl: { v: 0 }, phase: i * 1.7, capture: null,
+      kc: null, color: p.colors[0], twirl: { v: 0 }, phase: i * 1.7,
     };
     tiles.push(tile);
     load(tile, tile.color);
@@ -76,7 +76,7 @@ export function initShop() {
     }));
     el.querySelector('.add').addEventListener('click', async (e) => {
       const btn = e.currentTarget;
-      const thumb = await snapshot(tile);
+      const thumb = snapshot(tile);
       cart.add({
         key: `${p.id}-${tile.color}`, name: p.name, price: p.price, color: tile.color,
         detail: `${FILAMENTS[tile.color].name}, ready-made`, thumb,
@@ -107,9 +107,29 @@ export function initShop() {
     tile.kc = kc;
   }
 
-  // crop the tile out of the shared canvas right after it renders
+  // render the tile into a corner of the shared canvas and crop it (works even when the tile is off-screen)
   function snapshot(tile) {
-    return new Promise((resolve) => { tile.capture = resolve; setTimeout(() => { if (tile.capture === resolve) { tile.capture = null; resolve(null); } }, 400); });
+    if (!tile.kc) return null;
+    const S = 256;
+    tile.kc.sync();
+    tile.camera.aspect = 1;
+    tile.camera.zoom = 1.3;
+    tile.camera.position.y = tile.pivot.position.y - tile.pivot.scale.x * tile.kc.meta.height / 2;
+    tile.camera.updateProjectionMatrix();
+    const H = innerHeight;
+    renderer.setViewport(0, H - S, S, S);
+    renderer.setScissor(0, H - S, S, S);
+    renderer.render(tile.scene, tile.camera);
+    const dpr = renderer.getPixelRatio();
+    const c = document.createElement('canvas');
+    c.width = c.height = 160;
+    c.getContext('2d').drawImage(canvas, 0, 0, S * dpr, S * dpr, 0, 0, 160, 160);
+    tile.camera.zoom = 1;
+    tile.camera.position.y = 0;
+    tile.camera.updateProjectionMatrix();
+    renderer.setScissor(0, 0, innerWidth, H);
+    renderer.clear();
+    return c.toDataURL('image/webp', 0.85);
   }
 
   window.__shop = { tiles, get active() { return active; }, renderer };
@@ -142,15 +162,6 @@ export function initShop() {
       renderer.setViewport(r.left, H - r.bottom, r.width, r.height);
       renderer.setScissor(r.left, H - r.bottom, r.width, r.height);
       renderer.render(tile.scene, tile.camera);
-      if (tile.capture) {
-        const dpr = renderer.getPixelRatio();
-        const c = document.createElement('canvas');
-        c.width = c.height = 160;
-        const side = Math.min(r.width, r.height) * dpr;
-        c.getContext('2d').drawImage(canvas, r.left * dpr + (r.width * dpr - side) / 2, (r.top) * dpr + (r.height * dpr - side) / 2, side, side, 0, 0, 160, 160);
-        const done = tile.capture; tile.capture = null;
-        done(c.toDataURL('image/webp', 0.85));
-      }
     }
   });
 }

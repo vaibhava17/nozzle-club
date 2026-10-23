@@ -219,7 +219,7 @@ export function initStudio() {
     renderer.render(scene, camera);
     const c = document.createElement('canvas');
     c.width = c.height = 160;
-    const w = canvas.width, h = canvas.height, side = Math.min(w, h);
+    const w = canvas.width, h = canvas.height, side = Math.min(w, h) * 0.72;
     c.getContext('2d').drawImage(canvas, (w - side) / 2, (h - side) / 2, side, side, 0, 0, 160, 160);
     return c.toDataURL('image/webp', 0.85);
   }

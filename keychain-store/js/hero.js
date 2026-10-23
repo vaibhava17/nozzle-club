@@ -178,7 +178,7 @@ export function initHero() {
       next.uniforms.uPrint.value = 999; next.uniforms.uHot.value = 0;
       next.ring.scale.setScalar(1);
       pivot.position.y = HANG_Y;
-      P.printer.position.y = -200;
+      P.printer.visible = false;
       state.mode = 'hang';
       setHud('Ready to ship', 100, layers, layers);
       busy = false;
@@ -189,6 +189,7 @@ export function initHero() {
     state.mode = 'printing';
     state.tilt = -0.5;
     pivot.position.y = bedPivotY;
+    P.printer.visible = true;
     gsap.to(P.printer.position, { y: 0, duration: 0.6, ease: 'power3.out' });
 
     // 3. heat the nozzle
@@ -215,7 +216,7 @@ export function initHero() {
     // 5. pop it off the bed and hang it up
     state.mode = 'lifting';
     gsap.to(state, { temp: 180, duration: 3 });
-    gsap.to(P.printer.position, { y: -95, duration: 0.9, ease: 'power3.in', delay: 0.1 });
+    gsap.to(P.printer.position, { y: -95, duration: 0.9, ease: 'power3.in', delay: 0.1, onComplete: () => { if (state.mode === 'hang' || state.mode === 'lifting') P.printer.visible = false; } });
     gsap.to(state, { tilt: 0, duration: 1.2, ease: 'power3.out' });
     await gsap.to(pivot.position, { y: HANG_Y, duration: 1.1, ease: 'back.out(1.3)' });
     swing.kick(1.6, 3.2);
